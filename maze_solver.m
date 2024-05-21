@@ -40,6 +40,12 @@ for p = 1:size(connected_points,1)
     end
 end
 
+for q = 1: size(q_rand, 1)
+    %% find the nearest point to the generated random point
+    nearest_point = find_nearest(connected_points, q_rand(q,:))
+end
+
+
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  %%%%%%%%%%%%%%%%%%%%                FUNCTIONS                %%%%%%%%%%%%%%%%%%%%
@@ -68,4 +74,17 @@ function random_point = generate_randPoint(reference_point, range, map)
     if map(x_rand_num, y_rand_num)== 1  
         random_point = [x_rand_num, y_rand_num];
     end
+end
+
+function shortest_point = find_nearest(points_list, Point)
+    shortest_path = 1000;
+    nearest_point_index = 0;
+    for i = 1:size(points_list,1)
+        L1 = sqrt((points_list(i,1)-Point(1))^2 + (points_list(i,2)-Point(2))^2);
+        if L1<shortest_path
+            shortest_path = L1;
+            nearest_point_index =i;
+        end
+    end
+    shortest_point = points_list(nearest_point_index, :);
 end
