@@ -46,12 +46,33 @@ for q = 1: size(q_rand, 1)
     
     %% chenck for collisions in between
     collision = is_colliding(nearest_point, q_rand(q,:), map);
+    
     if collision == 0 %%% NO COLLISION
         plot([nearest_point(1) q_rand(q,1)],[nearest_point(2) q_rand(q,2)],'g-','LineWidth',0.5);
         %%% add the point to the list
         parent_id = nearest_point(end-1); %%% new point parent_id is previous_point_id
         
         connected_points = vertcat(connected_points,[q_rand(q,:), parent_id]);
+    
+    else %%% IS COLLIDING
+        scatter(rand_point(1), rand_point(2), 'w.', 'markerfacecolor', 'White');
+        %% Check the collision in the half way
+        q_new_id = q_rand(q,end-1);%%% new point_id is previous_point_id
+        q_new = [round((q_rand(q,1)+nearest_point(1))/2), round((q_rand(q,2)+nearest_point(2))/2),q_new_id];
+        %%% check if new point is on the wall:
+        if map(q_new(1), q_new(2)) == 1 %%% is not on the wall
+            scatter(q_new(1), q_new(2), 'b.', 'markerfacecolor', 'Green');
+            collision = is_colliding(nearest_point, q_new , map);
+            if collision == 0 %%% NO COLLISION
+                plot([nearest_point(1) q_new(1)],[nearest_point(2) q_new(2)],'g-','LineWidth',0.5);
+                %%% add the point to the list
+                parent_id = nearest_point(end-1);
+                connected_points = vertcat(connected_points,[q_new, parent_id]);
+            else
+                %%% Erase the point from map
+                scatter(q_new(1), q_new(2), 'w.', 'markerfacecolor', 'White');
+            end
+        end
     end
 end
 
