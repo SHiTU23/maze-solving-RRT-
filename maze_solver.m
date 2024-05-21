@@ -46,7 +46,13 @@ for q = 1: size(q_rand, 1)
     
     %% chenck for collisions in between
     collision = is_colliding(nearest_point, q_rand(q,:), map);
+    if collision == 0 %%% NO COLLISION
+        plot([nearest_point(1) q_rand(q,1)],[nearest_point(2) q_rand(q,2)],'g-','LineWidth',0.5);
+        %%% add the point to the list
+        parent_id = nearest_point(end-1); %%% new point parent_id is previous_point_id
         
+        connected_points = vertcat(connected_points,[q_rand(q,:), parent_id]);
+    end
 end
 
 
