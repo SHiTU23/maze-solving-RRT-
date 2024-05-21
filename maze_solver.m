@@ -96,6 +96,10 @@ while openPath_toTarget == false %%% COLLISION ON WAY TO TARGET
     connected_points;
 end
 
+%% plot to target
+plot([last_point(1) target(1)], [last_point(2) target(2)], 'm-', 'LineWidth',1);
+
+
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  %%%%%%%%%%%%%%%%%%%%                FUNCTIONS                %%%%%%%%%%%%%%%%%%%%
