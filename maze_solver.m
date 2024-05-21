@@ -30,52 +30,71 @@ rand_point = generate_randPoint(start, random_range, map);
 q_rand = [rand_point, point_id];
 scatter(q_rand(1), q_rand(2), 'b.', 'markerfacecolor', 'Blue');
 
-%% generate new random points for all available points in connected_points list
-for p = 1:size(connected_points,1)
-    point_id = point_id+1;
-    rand_point = generate_randPoint(connected_points(p,:), random_range, map);
-    if map(rand_point(1), rand_point(2)) == 1
-        scatter(rand_point(1), rand_point(2), 'b.', 'markerfacecolor', 'Blue');
-        q_rand = vertcat(q_rand,[rand_point, point_id]);
-    end
-end
+openPath_toTarget= false;
 
-for q = 1: size(q_rand, 1)
-    %% find the nearest point to the generated random point
-    nearest_point = find_nearest(connected_points, q_rand(q,:));
-    
-    %% chenck for collisions in between
-    collision = is_colliding(nearest_point, q_rand(q,:), map);
-    
-    if collision == 0 %%% NO COLLISION
-        plot([nearest_point(1) q_rand(q,1)],[nearest_point(2) q_rand(q,2)],'g-','LineWidth',0.5);
-        %%% add the point to the list
-        parent_id = nearest_point(end-1); %%% new point parent_id is previous_point_id
+while openPath_toTarget == false %%% COLLISION ON WAY TO TARGET 
+    %% generate new random points for all available points in connected_points list
+    for p = 1:size(connected_points,1)
+        point_id = point_id+1;
+        rand_point = generate_randPoint(connected_points(p,:), random_range, map);
+        if map(rand_point(1), rand_point(2)) == 1
+            scatter(rand_point(1), rand_point(2), 'b.', 'markerfacecolor', 'Blue');
+            q_rand = vertcat(q_rand,[rand_point, point_id]);
+        end
+    end
+
+    for q = 1: size(q_rand, 1)
+        %% find the nearest point to the generated random point
+        nearest_point = find_nearest(connected_points, q_rand(q,:));
         
-        connected_points = vertcat(connected_points,[q_rand(q,:), parent_id]);
-    
-    else %%% IS COLLIDING
-        scatter(rand_point(1), rand_point(2), 'w.', 'markerfacecolor', 'White');
-        %% Check the collision in the half way
-        q_new_id = q_rand(q,end-1);%%% new point_id is previous_point_id
-        q_new = [round((q_rand(q,1)+nearest_point(1))/2), round((q_rand(q,2)+nearest_point(2))/2),q_new_id];
-        %%% check if new point is on the wall:
-        if map(q_new(1), q_new(2)) == 1 %%% is not on the wall
-            scatter(q_new(1), q_new(2), 'b.', 'markerfacecolor', 'Green');
-            collision = is_colliding(nearest_point, q_new , map);
-            if collision == 0 %%% NO COLLISION
-                plot([nearest_point(1) q_new(1)],[nearest_point(2) q_new(2)],'g-','LineWidth',0.5);
-                %%% add the point to the list
-                parent_id = nearest_point(end-1);
-                connected_points = vertcat(connected_points,[q_new, parent_id]);
-            else
-                %%% Erase the point from map
-                scatter(q_new(1), q_new(2), 'w.', 'markerfacecolor', 'White');
+        %% chenck for collisions in between
+        collision = is_colliding(nearest_point, q_rand(q,:), map);
+        
+        if collision == 0 %%% NO COLLISION
+            plot([nearest_point(1) q_rand(q,1)],[nearest_point(2) q_rand(q,2)],'g-','LineWidth',0.5);
+            
+            %%% add the point to the list
+            parent_id = nearest_point(end-1); %%% new point parent_id is previous_point_id
+            connected_points = vertcat(connected_points,[q_rand(q,:), parent_id]);
+
+            %%% check for open way to target
+            openPath_toTarget = open_toTarget(target, q_rand(q,:), map);
+            if openPath_toTarget==true
+                last_point = [q_rand(q,:), parent_id];
+                break
+            end
+
+        else %%% IS COLLIDING
+            scatter(rand_point(1), rand_point(2), 'w.', 'markerfacecolor', 'White');
+            %% Check the collision in the half way
+            q_new_id = q_rand(q,end-1);%%% new point_id is previous_point_id
+            q_new = [round((q_rand(q,1)+nearest_point(1))/2), round((q_rand(q,2)+nearest_point(2))/2),q_new_id];
+            %%% check if new point is on the wall:
+            if map(q_new(1), q_new(2)) == 1 %%% is not on the wall
+                scatter(q_new(1), q_new(2), 'b.', 'markerfacecolor', 'Green');
+                collision = is_colliding(nearest_point, q_new , map);
+                if collision == 0 %%% NO COLLISION
+                    plot([nearest_point(1) q_new(1)],[nearest_point(2) q_new(2)],'g-','LineWidth',0.5);
+                    
+                    %%% add the point to the list
+                    parent_id = nearest_point(end-1);
+                    connected_points = vertcat(connected_points,[q_new, parent_id]);
+                    
+                    %%% check for open way to target
+                    openPath_toTarget = open_toTarget(target, q_new, map);
+                    if openPath_toTarget==true
+                        last_point = [q_new, parent_id];
+                        break
+                    end
+                else
+                    %%% Erase the point from map
+                    scatter(q_new(1), q_new(2), 'w.', 'markerfacecolor', 'White');
+                end
             end
         end
     end
+    connected_points;
 end
-
 
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,4 +153,14 @@ function collide = is_colliding(point1, point2, map)
         end
     end
     collide = deteted_collision;
+end
+
+function possible_way = open_toTarget(target,point, map)
+    collision_inway_toTarget = is_colliding(target, point, map);
+
+    if collision_inway_toTarget == 1 %%% colliding with obstacle
+        possible_way = false;
+    else
+        possible_way = true;
+    end 
 end
