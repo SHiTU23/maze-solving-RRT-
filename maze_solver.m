@@ -30,6 +30,16 @@ rand_point = generate_randPoint(start, random_range, map);
 q_rand = [rand_point, point_id];
 scatter(q_rand(1), q_rand(2), 'b.', 'markerfacecolor', 'Blue');
 
+%% generate new random points for all available points in connected_points list
+for p = 1:size(connected_points,1)
+    point_id = point_id+1;
+    rand_point = generate_randPoint(connected_points(p,:), random_range, map);
+    if map(rand_point(1), rand_point(2)) == 1
+        scatter(rand_point(1), rand_point(2), 'b.', 'markerfacecolor', 'Blue');
+        q_rand = vertcat(q_rand,[rand_point, point_id]);
+    end
+end
+
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  %%%%%%%%%%%%%%%%%%%%                FUNCTIONS                %%%%%%%%%%%%%%%%%%%%
