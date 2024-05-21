@@ -51,21 +51,22 @@ end
  %%%%%%%%%%%%%%%%%%%%                FUNCTIONS                %%%%%%%%%%%%%%%%%%%%
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function random_point = generate_randPoint(reference_point, range, map)
+    map_border = 500;
     t = 2*pi*10*rand(1,1);
     r = range*sqrt(10*rand(1,1));
     x_rand_num = round(abs((reference_point(1)+20) + (10+r.*cos(t))))+1;
     y_rand_num = round(abs((reference_point(2)+20) + (10+r.*sin(t))))+1;
-    if y_rand_num > 500
-        y_rand_num = 500;
-    elseif x_rand_num > 500
-        x_rand_num = 500;
+    if y_rand_num > map_border
+        y_rand_num = map_border;
+    elseif x_rand_num > map_border
+        x_rand_num = map_border;
     elseif y_rand_num < 1
         y_rand_num = 1;
     elseif x_rand_num < 1
         y_rand_num = 1;
     end
     %%% collision
-    while x_rand_num<0 || x_rand_num>500 || y_rand_num<0 || y_rand_num>500 || map(x_rand_num, y_rand_num)==0 
+    while x_rand_num<0 || x_rand_num>map_border || y_rand_num<0 || y_rand_num>map_border || map(x_rand_num, y_rand_num)==0 
         t = 2*pi*10*rand(1,1);
         r = range*sqrt(10*rand(1,1));
         x_rand_num = round(abs((reference_point(1)+20) + (10+r.*cos(t)))) +1;
