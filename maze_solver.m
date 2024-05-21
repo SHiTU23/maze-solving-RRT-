@@ -42,7 +42,11 @@ end
 
 for q = 1: size(q_rand, 1)
     %% find the nearest point to the generated random point
-    nearest_point = find_nearest(connected_points, q_rand(q,:))
+    nearest_point = find_nearest(connected_points, q_rand(q,:));
+    
+    %% chenck for collisions in between
+    collision = is_colliding(nearest_point, q_rand(q,:), map);
+        
 end
 
 
@@ -88,4 +92,19 @@ function shortest_point = find_nearest(points_list, Point)
         end
     end
     shortest_point = points_list(nearest_point_index, :);
+end
+
+function collide = is_colliding(point1, point2, map)
+    deteted_collision = false;
+    x = min(point1(1), point2(1)) : max(point1(1), point2(1));
+    y = min(point1(2), point2(2)) : max(point1(2), point2(2));
+    for i = 1:length(x)
+        for j = 1:length(y)
+            if map(x(i), y(j)) == 0 %%% COLLISION
+                deteted_collision = true;
+                break
+            end
+        end
+    end
+    collide = deteted_collision;
 end
