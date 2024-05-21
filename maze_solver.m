@@ -99,6 +99,19 @@ end
 %% plot to target
 plot([last_point(1) target(1)], [last_point(2) target(2)], 'm-', 'LineWidth',1);
 
+%% plot main path
+current_pose = last_point;
+while current_pose(1:2) ~= start(1:2)
+    for i = 1: size(connected_points, 1)
+        if connected_points(i,3) == current_pose(end) %%% current pose parent_id == point_id
+            next_point = connected_points(i,:);
+            break
+        end
+    end
+    plot([current_pose(1) next_point(1)], [current_pose(2) next_point(2)], 'm-', 'LineWidth', 0.5);
+    current_pose = next_point;
+end
+
 
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
