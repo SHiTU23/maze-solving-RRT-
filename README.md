@@ -30,6 +30,8 @@ In this Algorithm, start and target points are defined in the script. Searching 
 
 > Keep that in mind that ***complicated maps*** require more time to get solved and with current algorithm, mostly fails to find a path to the middle side of map.
 
+***Dependency*** : Navigation Toolbox 
+
 - **Choose the map**
     > Define the type of the map to be either easy or complex
 
