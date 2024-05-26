@@ -52,3 +52,19 @@ In this Algorithm, start and target points are defined in the script. Searching 
     > *NOTE* : Target point desn't require an ID, as it wont be a parent to any other point. 
 
 <br>
+
+## Results
+Dark red points are the targets and red points, start points.
++ **Complex map**
+
+    <img src="./pics/MAP9.png" alt="easy_map1" width="300"/>
+
++ **Easy maps**
+    > Pink Path is the final path to the target.\
+    *It is not drawn in all figures.*
+
+    <img src="./pics/map10.png" alt="easy_map1" width="300"/>
+    <img src="./pics/MAP7.png" alt="easy_map1" width="300"/>
+    <img src="./pics/map12.png" alt="easy_map1" width="300"/>
+    <img src="./pics/map5.png" alt="easy_map1" width="300"/>
+    <img src="./pics/map8.png" alt="easy_map1" width="300"/>
